@@ -1,5 +1,16 @@
 import os
 
+MORSE_CODE_DICT = {"A":". -", "B":"- . . .", "C": "- . - .", "D":"- . .", "E":".",
+                   "F":". . - .", "G":"- - .", "H":". . . .", "I":". .", "J":". - - -",
+                   "K":"- . -", "L":". - . .", "M":"- -", "N":"- .", "O":"- - -",
+                   "P":". - - .", "Q":"- - . -", "R":". - .", "S":". . .",
+                   "T":"-", "U":". . -", "V":". . . -", "W":". - -",
+                   "X":"- . . -", "Y":"- . - -", "Z":"- - . .", "1":". - - - -",
+                   "2":". . - - -", "3":". . . - -", "4":". . . . -", "5":". . . . .",
+                   "6":"- . . . .", "7":"- - . . .", "8":"- - - . .",
+                   "9":"- - - - .", "0":"- - - - -"
+                   }
+
 def startChoices(items):
     """Prints the choices for the user to pick from"""
     if len(items) == 0:
@@ -18,18 +29,35 @@ def userStart(prompt, min=1, max=3):
         else:
             return int(userStartChoice)
 
-
 def encoding(prompt):
-    """Asks the user for the text being encoded"""
+    """Converts the user's text to Morse code"""
     userText = input(prompt).upper().strip()
-    user_words = userText.split(" ")
-
+    morse_words = []
+    for words in userText.split():
+        morse_letters = []
+        for character in words:
+            if character in MORSE_CODE_DICT:
+                code = MORSE_CODE_DICT[character].replace(" ", "")
+                morse_letters.append(code)
+            else:
+                print(f"Warning! Character '{character}' not reconized. Skipped.")
+        morse_words.append(" ".join(morse_letters))
+    print("Encoded string:", "   ".join(morse_words))
 def decoding(prompt):
-    """Asks the user for the Morse code being encoded"""
-    userMorse = input(prompt)
-    userMorseWords = userMorse.split("   ")
-
-
+    """Converts the user's Morse code to text"""
+    morse_to_text = {value.replace(" ", ""): key for key, value in MORSE_CODE_DICT.items()}
+    userMorse = input(prompt).strip()
+    decoded_words = []
+    for word in userMorse.split("   "):
+        decoded_letters = []
+        for code in word.split():
+            if code in morse_to_text:
+                decoded_letters.append(morse_to_text[code])
+            else:
+                print(f"Warning! Unknown sequence reconinzed! Skipped.")
+        decoded_words.append("".join(decoded_letters))
+    print("Decoded text:", " ".join(decoded_words))
+    
 def clearScreen():
     """Clear the window's console"""
     os.system('cls' if os.name == 'nt' else 'clear')
